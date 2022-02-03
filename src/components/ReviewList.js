@@ -15,6 +15,7 @@ const ReviewListItem = ({ item, onDelete }) => {
       <img className="ReviewListItem_img" src={item.imgUrl} alt={item.title} />
       <div>
         <h1>{item.title}</h1>
+        <h2>{item.id}</h2>
         <p>{item.rating}</p>
         <p>{formatDate(item.createdAt)}</p>
         <p>{item.content}</p>
@@ -29,7 +30,7 @@ const ReviewList = ({ items, onDelete }) => {
     <ul>
       {items.map((item) => {
         return (
-          <li>
+          <li key={item.id}>
             <ReviewListItem item={item} onDelete={onDelete} />
           </li>
         )
