@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ReviewList from './ReviewList'
+import ReviewForm from './ReviewForm'
 import { getReviews } from '../api'
 
 const LIMIT = 6
@@ -8,6 +9,7 @@ const App = () => {
   const [order, setOrder] = useState('createdAt')
   const [offset, setOffset] = useState(0)
   const [hasNext, setHasNext] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [items, setItems] = useState([])
   const sortedItems = items.sort((a, b) => b[order] - a[order])
 
@@ -20,7 +22,18 @@ const App = () => {
   }
 
   const handleLoad = async (options) => {
-    const { paging, reviews } = await getReviews(options)
+    console.log('옵션', options)
+    let result
+    try {
+      setIsLoading(true)
+      result = await getReviews(options)
+    } catch (error) {
+      console.log(error)
+      return
+    } finally {
+      setIsLoading(false)
+    }
+    const { paging, reviews } = result
     if (options.offset === 0) {
       setItems(reviews)
     } else {
@@ -44,8 +57,13 @@ const App = () => {
         <button onClick={handleNewestClick}>최신순</button>
         <button onClick={handleBestClick}>베스트</button>
       </div>
+      <ReviewForm />
       <ReviewList items={sortedItems} onDelete={handleDelete} />
-      {hasNext && <button onClick={handleLoadMore}>더 보기</button>}
+      {hasNext && (
+        <button disabled={isLoading} onClick={handleLoadMore}>
+          더 보기
+        </button>
+      )}
     </>
   )
 }
