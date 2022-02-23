@@ -1,4 +1,5 @@
 import React from 'react'
+import Rating from './Rating'
 import styled from 'styled-components'
 
 const formatDate = (value) => {
@@ -16,7 +17,7 @@ const ReviewListItem = ({ item, onDelete }) => {
       <div>
         <h1>{item.title}</h1>
         <h2>{item.id}</h2>
-        <p>{item.rating}</p>
+        <Rating value={item.rating} />
         <p>{formatDate(item.createdAt)}</p>
         <p>{item.content}</p>
         <button onClick={handleDeleteClick}>삭제</button>
