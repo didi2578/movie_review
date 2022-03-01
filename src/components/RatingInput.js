@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
 import Rating from './Rating'
 
 const RatingInput = ({ name, value, onChange }) => {
@@ -10,7 +9,6 @@ const RatingInput = ({ name, value, onChange }) => {
   const handleMouseOut = () => setRating(value)
   return (
     <Rating
-      style={{ cursor: 'pointer' }}
       value={rating}
       onSelect={handleSelect}
       onHover={setRating}

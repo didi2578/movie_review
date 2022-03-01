@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ReviewList from './ReviewList'
 import ReviewForm from './ReviewForm'
-import { getReviews } from '../api'
+import { createReview, getReviews, updateReview, deleteReview } from '../api'
 
 const LIMIT = 6
 
@@ -16,9 +16,11 @@ const App = () => {
   const handleNewestClick = () => setOrder('createdAt')
   const handleBestClick = () => setOrder('rating')
 
-  const handleDelete = (id) => {
-    const nextItems = items.filter((item) => item.id !== id)
-    setItems(nextItems)
+  const handleDelete = async (id) => {
+    const result = await deleteReview(id)
+    alert('삭제하시겠습니까?')
+    if (!result) return
+    setItems((prevItems) => prevItems.filter((item) => item.id !== id))
   }
 
   const handleLoad = async (options) => {
@@ -47,9 +49,23 @@ const App = () => {
     await handleLoad({ order, offset, limit: LIMIT })
   }
 
+  const handleCreateSuccess = (review) => {
+    setItems((prevItems) => [review, ...prevItems])
+  }
   useEffect(() => {
     handleLoad({ order, offset: 0, limit: LIMIT })
   }, [order])
+
+  const handleUpdateSuccess = (review) => {
+    setItems((prevItems) => {
+      const splitIdx = prevItems.findIndex((item) => item.id === review.id)
+      return [
+        ...prevItems.slice(0, splitIdx),
+        review,
+        ...prevItems.slice(splitIdx + 1),
+      ]
+    })
+  }
 
   return (
     <>
@@ -57,8 +73,16 @@ const App = () => {
         <button onClick={handleNewestClick}>최신순</button>
         <button onClick={handleBestClick}>베스트</button>
       </div>
-      <ReviewForm />
-      <ReviewList items={sortedItems} onDelete={handleDelete} />
+      <ReviewForm
+        onSubmit={createReview}
+        onSubmitSuccess={handleCreateSuccess}
+      />
+      <ReviewList
+        items={sortedItems}
+        onDelete={handleDelete}
+        onUpdate={updateReview}
+        onUpdateSuccess={handleUpdateSuccess}
+      />
       {hasNext && (
         <button disabled={isLoading} onClick={handleLoadMore}>
           더 보기
