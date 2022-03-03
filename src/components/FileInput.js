@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 const FileInput = ({ name, value, onChange, initialPreview }) => {
   const [preview, setPreview] = useState(initialPreview)
-  console.log('왜', preview)
+
   const inputRef = useRef()
 
   const handleChange = (e) => {
