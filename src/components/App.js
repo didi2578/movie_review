@@ -3,7 +3,8 @@ import ReviewList from './ReviewList'
 import ReviewForm from './ReviewForm'
 import useAsync from '../hooks/useAsync'
 import { createReview, getReviews, updateReview, deleteReview } from '../api'
-import LocaleContext from '../contexts/LocaleContext'
+import { LocaleProvider } from '../contexts/LocaleContext'
+import LocaleSelect from './LocaleSelect'
 
 const LIMIT = 6
 
@@ -66,8 +67,9 @@ const App = () => {
   }
 
   return (
-    <LocaleContext.Provider value={'ko'}>
+    <LocaleProvider defaultValue="ko">
       <>
+        <LocaleSelect />
         <div>
           <button onClick={handleNewestClick}>최신순</button>
           <button onClick={handleBestClick}>베스트</button>
@@ -89,7 +91,7 @@ const App = () => {
         )}
         {loadingError?.message && <span>{loadingError.message}</span>}
       </>
-    </LocaleContext.Provider>
+    </LocaleProvider>
   )
 }
 

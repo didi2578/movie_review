@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import FileInput from './FileInput'
 import useAsync from '../hooks/useAsync'
 import RatingInput from './RatingInput'
+import useTranslate from 'hooks/useTranslate'
 
 const INITIAL_VALUES = {
   title: '',
@@ -17,6 +18,7 @@ const ReviewForm = ({
   onSubmitSuccess,
   onCancel,
 }) => {
+  const t = useTranslate()
   const [values, setValues] = useState(initialValues)
   const [isSubmitting, submittingError, onSubmitAsync] = useAsync(onSubmit)
 
@@ -68,9 +70,9 @@ const ReviewForm = ({
           value={values.content}
           onChange={handleInputChange}
         />
-        {onCancel && <button onClick={onCancel}>취소</button>}
+        {onCancel && <button onClick={onCancel}>{t('cancel button')}</button>}
         <button disabled={isSubmitting} type="submit">
-          확인
+          {t('confirm button')}
         </button>
         {submittingError && <div>{submittingError.message}</div>}
       </form>
