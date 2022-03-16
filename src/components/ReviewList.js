@@ -21,16 +21,24 @@ const ReviewListItem = ({ item, onDelete, onEdit }) => {
   }
   return (
     <ReviewItem>
-      <img className="ReviewListItem_img" src={item.imgUrl} alt={item.title} />
-      <div>
+      <img src={item.imgUrl} alt={item.title} />
+      <ReviewItemLow>
         <h1>{item.title}</h1>
-        <h2>{item.id}</h2>
         <Rating value={item.rating} />
-        <p>{formatDate(item.createdAt)}</p>
-        <p>{item.content}</p>
-        <button onClick={handleEditClick}>{t('edit button')}</button>
-        <button onClick={handleDeleteClick}>{t('delete button')}</button>
-      </div>
+        <p className="date">{formatDate(item.createdAt)}</p>
+        <p p className="content">
+          {item.content}
+        </p>
+
+        <div>
+          <Button onClick={handleEditClick} edit={true}>
+            {t('edit button')}
+          </Button>
+          <Button onClick={handleDeleteClick} delete={true}>
+            {t('delete button')}
+          </Button>
+        </div>
+      </ReviewItemLow>
     </ReviewItem>
   )
 }
@@ -40,7 +48,7 @@ const ReviewList = ({ items, onUpdate, onUpdateSuccess, onDelete }) => {
   const handleCancel = () => setEditingId(null)
 
   return (
-    <ul>
+    <UlReviewList>
       {items.map((item) => {
         if (item.id === editingId) {
           const { id, imgUrl, title, rating, content } = item
@@ -75,7 +83,7 @@ const ReviewList = ({ items, onUpdate, onUpdateSuccess, onDelete }) => {
           </li>
         )
       })}
-    </ul>
+    </UlReviewList>
   )
 }
 export default ReviewList
@@ -84,10 +92,76 @@ const ReviewItem = styled.div`
   display: flex;
   padding: 10px;
   align-items: center;
-  .ReviewListItem_img {
-    width: 200px;
-    height: 300px;
-    object-fit: cover;
+  img {
+    width: 182px;
+    height: 262px;
     margin-right: 20px;
+    border-radius: 0 15px 0 15px;
+    object-fit: cover;
+  }
+`
+
+const ReviewItemLow = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 22px 0 18px;
+  overflow: hidden;
+  h1 {
+    margin: 0 0 4px;
+    font-weight: 400;
+    font-size: 20px;
+  }
+  .date {
+    margin: 8px 0 19px;
+    color: #bdbdbd;
+    font-size: 14px;
+    letter-spacing: -0.25px;
+  }
+  .content {
+    display: -webkit-box;
+    flex: 1 1;
+    margin: 0 0 19px;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    color: #545357;
+    font-size: 16px;
+    line-height: 1.63;
+    letter-spacing: -0.2px;
+  }
+`
+
+const Button = styled.button`
+  padding: 0;
+  border: none;
+  color: ${(props) => (props.delete ? '#ff0023' : '#000')};
+  margin-right: ${(props) => props.edit && '18px'};
+  font-size: 16px;
+  letter-spacing: -0.28px;
+  background-color: transparent;
+  cursor: pointer;
+  :hover {
+    font-weight: bold;
+  }
+`
+
+const UlReviewList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  :not(:last-child) {
+    border-bottom: 1px dashed #c5c5c5;
+  }
+  li {
+    padding: 30px 0;
+    max-height: 322px;
+    overflow: hidden;
+    :first-child {
+      padding-top: 0;
+    }
+    :not(:last-child) {
+      border-bottom: 1px dashed #c5c5c5;
+    }
   }
 `

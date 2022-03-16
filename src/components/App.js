@@ -3,12 +3,18 @@ import ReviewList from './ReviewList'
 import ReviewForm from './ReviewForm'
 import useAsync from '../hooks/useAsync'
 import { createReview, getReviews, updateReview, deleteReview } from '../api'
-import { LocaleProvider } from '../contexts/LocaleContext'
 import LocaleSelect from './LocaleSelect'
+
+import logoImg from '../assets/logo.png'
+import ticketImg from '../assets/ticket.png'
+import useTranslate from '../hooks/useTranslate'
+import AppSortButton from 'assets/AppSortButton'
+import styled from 'styled-components'
 
 const LIMIT = 6
 
 const App = () => {
+  const t = useTranslate()
   const [order, setOrder] = useState('createdAt')
   const [offset, setOffset] = useState(0)
   const [hasNext, setHasNext] = useState(false)
@@ -67,32 +73,168 @@ const App = () => {
   }
 
   return (
-    <LocaleProvider defaultValue="ko">
-      <>
-        <LocaleSelect />
-        <div>
-          <button onClick={handleNewestClick}>최신순</button>
-          <button onClick={handleBestClick}>베스트</button>
+    <AppComponent>
+      <AppNav>
+        <div className="App-nav-container">
+          <img className="App-logo" src={logoImg} alt="MOVIDE PEDIA" />
+          <LocaleSelect />
         </div>
-        <ReviewForm
-          onSubmit={createReview}
-          onSubmitSuccess={handleCreateSuccess}
-        />
-        <ReviewList
-          items={sortedItems}
-          onDelete={handleDelete}
-          onUpdate={updateReview}
-          onUpdateSuccess={handleUpdateSuccess}
-        />
-        {hasNext && (
-          <button disabled={isLoading} onClick={handleLoadMore}>
-            더 보기
-          </button>
-        )}
-        {loadingError?.message && <span>{loadingError.message}</span>}
-      </>
-    </LocaleProvider>
+      </AppNav>
+
+      <AppContainer>
+        <div
+          className="App-ReviewForm"
+          style={{
+            backgroundImage: `url("${ticketImg}")`,
+          }}
+        >
+          <ReviewForm
+            onSubmit={createReview}
+            onSubmitSuccess={handleCreateSuccess}
+          />
+        </div>
+
+        <div className="App-sorts">
+          <AppSortButton
+            selected={order === 'createdAt'}
+            onClick={handleNewestClick}
+          >
+            {t('newest')}
+          </AppSortButton>
+          <AppSortButton
+            selected={order === 'rating'}
+            onClick={handleBestClick}
+          >
+            {t('best')}
+          </AppSortButton>
+        </div>
+
+        <div className="App-ReviewList">
+          <ReviewList
+            items={sortedItems}
+            onDelete={handleDelete}
+            onUpdate={updateReview}
+            onUpdateSuccess={handleUpdateSuccess}
+          />
+          {hasNext && (
+            <button
+              className="load_more"
+              disabled={isLoading}
+              onClick={handleLoadMore}
+            >
+              {t('load more')}
+            </button>
+          )}
+          {loadingError?.message && <span>{loadingError.message}</span>}
+        </div>
+      </AppContainer>
+
+      <AppFooter>
+        <div className="App-footer-container">
+          {t('terms of service')} | {t('privacy policy')}
+        </div>
+      </AppFooter>
+    </AppComponent>
   )
 }
 
 export default App
+
+const AppComponent = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  input,
+  textarea {
+    padding: 15px 20px;
+    border: solid 1px #f9f9f9;
+    border-radius: 6px;
+    outline: none;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    font-family: sans-serif;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #bdbdbd;
+  }
+
+  input:focus,
+  textarea:focus {
+    border: solid 1px #d1d1d1;
+  }
+`
+
+const AppNav = styled.nav`
+  flex: none;
+  height: 65px;
+  background-color: #fff;
+  border-bottom: 1px solid #e2e2e2;
+  .App-nav-container {
+    width: 100%;
+    max-width: 860px;
+    margin: auto;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    .App-logo {
+      margin-top: -5px;
+    }
+  }
+`
+
+const AppContainer = styled.div`
+  flex: 1 1;
+  width: 100%;
+  max-width: 860px;
+  margin: auto;
+  padding: 50px 21px;
+
+  .App-ReviewForm {
+    padding: 30px 32px 30px 30px;
+    background-position: center top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 0 11px rgba(105, 105, 105, 0.2));
+    border-radius: 5px;
+  }
+
+  .App-sorts {
+    margin: 51px 0 23px;
+  }
+
+  .App-ReviewList {
+    padding: 30px 30px 0;
+    border-radius: 5px;
+    box-shadow: 0 0 11px 0 rgba(105, 105, 105, 0.2);
+    background-color: #fff;
+    .load_more {
+      width: 100%;
+      padding: 25px 0;
+      font-size: 16px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      :hover {
+        font-weight: bold;
+      }
+    }
+  }
+`
+
+const AppFooter = styled.footer`
+  flex: none;
+  background-color: #000;
+  .App-footer-container {
+    padding: 30px 21px;
+    font-size: 14px;
+    letter-spacing: -0.25px;
+    text-align: right;
+    color: #838383;
+    width: 100%;
+    max-width: 860px;
+    margin: auto;
+  }
+`

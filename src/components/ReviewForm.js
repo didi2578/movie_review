@@ -3,6 +3,7 @@ import FileInput from './FileInput'
 import useAsync from '../hooks/useAsync'
 import RatingInput from './RatingInput'
 import useTranslate from 'hooks/useTranslate'
+import styled from 'styled-components'
 
 const INITIAL_VALUES = {
   title: '',
@@ -52,32 +53,107 @@ const ReviewForm = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <FileInput
+          className="ReviewForm-preview"
           name="imgFile"
           value={values.imgFile}
           initialPreview={initialPreview}
           onChange={handleChange}
         />
-        <input name="title" value={values.title} onChange={handleInputChange} />
-        <RatingInput
-          name="rating"
-          value={values.rating}
-          onChange={handleChange}
-        />
-        <textarea
-          name="content"
-          value={values.content}
-          onChange={handleInputChange}
-        />
-        {onCancel && <button onClick={onCancel}>{t('cancel button')}</button>}
-        <button disabled={isSubmitting} type="submit">
-          {t('confirm button')}
-        </button>
-        {submittingError && <div>{submittingError.message}</div>}
-      </form>
+        <FormLow>
+          <div className="ReviewForm-title-rating">
+            <input
+              name="title"
+              value={values.title}
+              onChange={handleInputChange}
+              placeholder={t('title placeholder')}
+            />
+            <RatingInput
+              name="rating"
+              value={values.rating}
+              onChange={handleChange}
+              pointer={true}
+            />
+          </div>
+          <textarea
+            name="content"
+            value={values.content}
+            onChange={handleInputChange}
+            placeholder={t('content placeholder')}
+          />
+          <FormError>
+            <div className="ReviewForm-error">
+              {submittingError && <div>{submittingError.message}</div>}
+            </div>
+            <div>
+              {onCancel && (
+                <Button onClick={onCancel} cancel={true}>
+                  {t('cancel button')}
+                </Button>
+              )}
+              <Button disabled={isSubmitting} type="submit" submit={true}>
+                {t('confirm button')}
+              </Button>
+            </div>
+          </FormError>
+        </FormLow>
+      </Form>
     </>
   )
 }
 
 export default ReviewForm
+
+const Form = styled.form`
+  display: flex;
+  max-width: 100%;
+`
+const FormLow = styled.div`
+  margin-left: 22px;
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+  overflow: hidden;
+  .ReviewForm-title-rating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 21px;
+    input {
+      flex: 1 1;
+      margin-right: 22px;
+      min-width: 0;
+    }
+  }
+  textarea {
+    height: 127px;
+    margin-bottom: 16px;
+    resize: none;
+  }
+`
+const FormError = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 0;
+  .ReviewForm-error {
+    flex: 1 1;
+    margin-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #ff0023;
+    font-size: 14px;
+  }
+`
+
+const Button = styled.button`
+  padding: 11px 40px;
+  border: none;
+  color: ${(props) => (props.submit ? '#fff' : '#000')};
+  font-weight: 600px;
+  font-size: 17px;
+  cursor: pointer;
+  background-color: ${(props) => (props.submit ? '#000' : 'transparent')};
+  margin-right: ${(props) => props.cancel && '10px'};
+  border-radius: ${(props) => props.submit && '0 10px 0 10px'};
+`

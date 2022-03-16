@@ -1,28 +1,27 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar } from '@fortawesome/free-solid-svg-icons'
 
 const RATINGS = [1, 2, 3, 4, 5]
 
-const Star = ({ selected = false, rating = 0, onSelect, onHover }) => {
-  const className = `Rating-star ${selected ? 'selected' : ''}`
+const Star = ({ selected = false, rating = 0, onSelect, onHover, pointer }) => {
   const handleClick = onSelect ? () => onSelect(rating) : undefined
-
   const handleMouesOver = onHover ? () => onHover(rating) : undefined
+
   return (
-    <FontAwesomeIcon
-      icon={faStar}
-      className={className}
+    <Stars
+      select={selected}
       onClick={handleClick}
       onMouseOver={handleMouesOver}
-    />
+      pointer={pointer}
+    >
+      ★
+    </Stars>
   )
 }
 
-const Rating = ({ className, value = 0, onSelect, onHover, onMouseOut }) => {
+const Rating = ({ value = 0, onSelect, onHover, onMouseOut, pointer }) => {
   return (
-    <StarWrapper className={className} onMouseOut={onMouseOut}>
+    <div onMouseOut={onMouseOut}>
       {RATINGS.map((rating) => (
         <Star
           key={rating}
@@ -30,20 +29,17 @@ const Rating = ({ className, value = 0, onSelect, onHover, onMouseOut }) => {
           rating={rating}
           onSelect={onSelect}
           onHover={onHover}
+          pointer={pointer}
         />
       ))}
-    </StarWrapper>
+    </div>
   )
 }
 
 export default Rating
 
-const StarWrapper = styled.div`
-  .Rating-star {
-    color: gray;
-  }
-
-  .Rating-star.selected {
-    color: #b6f509;
-  }
+const Stars = styled.span`
+  color: ${(props) => (props.select ? '#ffb700' : '#ffe5a2')};
+  font-size: 25px;
+  cursor: ${(props) => props.pointer && 'pointer'};
 `
