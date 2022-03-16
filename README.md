@@ -1,10 +1,8 @@
 #🎬[React] 영화 리뷰 작성 웹페이지
 
+##[🎞MOVIEPEDIA 바로가기](https://didi2578.github.io/movie_review/)
 
 ![moviepedia](https://user-images.githubusercontent.com/88611957/158615533-8515b26f-1a9a-40d1-8254-aedfcbbd1952.png)
-
-
-[🎞MOVIEPEDIA 바로가기](https://didi2578.github.io/movie_review/)
 
 
 ## 📃구현기능 [기본 CRUD 구현]
